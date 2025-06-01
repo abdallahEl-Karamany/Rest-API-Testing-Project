@@ -2,6 +2,7 @@ package reqres;
 
 import Models.ResponseModels.GetListUsers;
 import Models.ResponseModels.GetSingleUser;
+import Models.ResponseModels.LoginResponseModel;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
@@ -22,10 +23,9 @@ public class UserTest {
 
     @BeforeClass
     public void loginTest() throws JsonProcessingException {
-        Response response = login(userName, password,200);
-        JsonPath jsonpath = response.jsonPath();
-        token = jsonpath.get("token");
+        LoginResponseModel response = login(userName, password,200, LoginResponseModel.class);
 
+        token = response.token;
         Assert.assertNotNull(token);
     }
 
@@ -33,7 +33,7 @@ public class UserTest {
     public void testGetSingleUser() {
         SoftAssert softAssert = new SoftAssert();
         int id = 2;
-        GetSingleUser response = getSingleUser(id, token,200);
+        GetSingleUser response = getSingleUser(id, token,200,GetSingleUser.class);
         softAssert.assertEquals(response.data.id, id, "id is not correct");
         softAssert.assertNotNull(response.data.email, "email is Null");
         softAssert.assertNotNull(response.data.firstName, "First Name is Null");

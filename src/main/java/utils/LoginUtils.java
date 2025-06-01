@@ -10,10 +10,10 @@ import static utils.Constants.*;
 import static utils.Headers.generalHeaders;
 
 public class LoginUtils {
-    public static Response login(String email, String password,int statusCode ) throws JsonProcessingException {
+    public static <T>T login(String email, String password,int statusCode,Class<T> responseClass ) throws JsonProcessingException {
         LoginRequestModel loginRequestModel = new LoginRequestModel(email, password);
 
         return RestAssured.given().headers(generalHeaders()).when().body(GeneralUtils.getObject(loginRequestModel)).post(baseURL+loginEndPoint).then()
-                .statusCode(statusCode).extract().response();
+                .statusCode(statusCode).extract().response().as(responseClass);
     }
 }

@@ -22,8 +22,7 @@ public class GetSingleUser {
         public String lastName;
         @JsonProperty("avatar")
         public String avatar;
-        @JsonProperty("error")
-        public String error;
+
     }
 
     @JsonInclude(JsonInclude.Include.NON_NULL)

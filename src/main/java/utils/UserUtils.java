@@ -15,10 +15,10 @@ import static utils.Constants.userEndPoint;
 import static utils.Headers.generalHeaders;
 
 public class UserUtils {
-    public static GetSingleUser getSingleUser(int id, String token, int statusCode){
+    public static <T>T getSingleUser(int id, String token, int statusCode,Class<T> responseClass){
 
         return RestAssured.given().headers(generalHeaders(token)).get(baseURL+userEndPoint+"/"+id).then().statusCode(statusCode).extract()
-                .response().as(GetSingleUser.class);
+                .response().as(responseClass);
     }
     public static GetListUsers getListUsers(int pageNo, String token,int statusCode){
         Map<String,Integer> queryParam=new HashMap<>();
