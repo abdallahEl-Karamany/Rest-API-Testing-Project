@@ -2,6 +2,7 @@ package reqres;
 
 import Models.ResponseModels.GetListUsers;
 import Models.ResponseModels.GetSingleUser;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import org.testng.Assert;
@@ -20,8 +21,8 @@ public class UserTest {
 
 
     @BeforeClass
-    public void loginTest() {
-        Response response = login(userName, password);
+    public void loginTest() throws JsonProcessingException {
+        Response response = login(userName, password,200);
         JsonPath jsonpath = response.jsonPath();
         token = jsonpath.get("token");
 
@@ -60,12 +61,11 @@ public class UserTest {
     }
 
     @Test
-    public void testCreatUser() {
-        Response response = createUser(name, job);
+    public void testCreatUser() throws JsonProcessingException {
+        Response response = createUser(name, job,201);
         JsonPath jsonPath = response.jsonPath();
         response.prettyPrint();
         SoftAssert softAssert = new SoftAssert();
-        Assert.assertEquals(response.statusCode(), 201, "Wrong status code");
         softAssert.assertEquals(jsonPath.getString("name"), "abdallah", "Wrong name at creation");
         softAssert.assertEquals(jsonPath.getString("job"), "student", "Wrong job at creation");
         softAssert.assertNotNull(jsonPath.getString("id"), "the id is null");
@@ -74,15 +74,14 @@ public class UserTest {
     }
 
     @Test
-    public void testCreateUserWithEmptyName() {
-        Response response = createUser("", job);
-        response.prettyPrint();
-        Assert.assertEquals(response.statusCode(), 400, "Wrong status code");
+    public void testCreateUserWithEmptyName() throws JsonProcessingException {
+        Response response = createUser("", job,400);
+
     }
 
     @Test
-    public void testCreateUserWithEmptyJob() {
-        Response response = createUser(name, "");
-        Assert.assertEquals(response.statusCode(), 400, "Wrong status code");
+    public void testCreateUserWithEmptyJob() throws JsonProcessingException {
+        Response response = createUser(name, "",400);
+
     }
 }

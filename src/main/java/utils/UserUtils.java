@@ -1,7 +1,9 @@
 package utils;
 
+import Models.RequestModels.CreateUserRequestModel;
 import Models.ResponseModels.GetListUsers;
 import Models.ResponseModels.GetSingleUser;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 
@@ -24,10 +26,8 @@ public class UserUtils {
         return RestAssured.given().headers(generalHeaders(token)).queryParams(queryParam).when().get(baseURL+userEndPoint)
                 .then().statusCode(statusCode).extract().response().as(GetListUsers.class);
     }
-    public static Response createUser(String Name ,String job){
-        return  RestAssured.given().headers(generalHeaders()).body("{\n" +
-                "    \"name\": \""+Name+"\",\n" +
-                "    \"job\": \""+job+"\"\n" +
-                "}").when().post(baseURL+userEndPoint).then().extract().response();
+    public static Response createUser(String Name ,String job,int statusCode) throws JsonProcessingException {
+        CreateUserRequestModel createUser=new CreateUserRequestModel(Name,job);
+        return  RestAssured.given().headers(generalHeaders()).when().body(GeneralUtils.getObject(createUser)).post(baseURL+userEndPoint).then().statusCode(statusCode).extract().response();
     }
 }
